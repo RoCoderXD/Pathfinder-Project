@@ -430,36 +430,38 @@ end
 
 
 local function PlayCurrentPath()
+    print("1")
     if isPathing == false then
         isPathing = true
-        
+        print("2")
 
         local numberofpoints = 0
         for i,v in pairs(PointsFolder:GetChildren()) do
             numberofpoints = numberofpoints + 1
         end
 
-
+        print("3")
 
         if numberofpoints > 1 then
 
-
+            print("4")
             local numberNextPosition = 1
             local nextPosition = PointsFolder["Pos" .. numberNextPosition]
             local path = Pathfinder:CreatePath()
             local endpos = nextPosition.Position
 
             path:ComputeAsync(RootPosition, endpos)
-
+            print("5")
             for i, wayPoint in pairs (path:GetWaypoints()) do
+                print("6")
                 print(wayPoint.Position)
-                if isPathing then
+                if isPathing == true then
                     player.Humanoid:MoveTo(wayPoint.Position)
-            
+                    print("7")
                     if wayPoint.Action == Enum.PathWaypointAction.Jump then
                         player.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
                     end
-            
+                    print("8")
                     player.Humanoid.MoveToFinished:Wait()
                 else
                     return
