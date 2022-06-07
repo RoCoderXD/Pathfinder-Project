@@ -330,7 +330,7 @@ local PointsFolder = Instance.new("Folder")
 PointsFolder.Parent = workspace
 
 local ExistingPoints = 0
-local IsPathing = false
+local isPathing = false
 local isVisual = false
 
 
@@ -342,7 +342,7 @@ local isVisual = false
 
 
 local function CreatePoint()
-    if not IsPathing then
+    if not isPathing then
         
         ExistingPoints = ExistingPoints + 1
         
@@ -395,7 +395,7 @@ end
 
 
 local function DeleteLastPoint()
-    if not IsPathing then
+    if not isPathing then
         
         PointsFolder["Pos" .. ExistingPoints]:Destroy()
         MainUI["Pos" .. ExistingPoints]:Destroy()
@@ -410,7 +410,7 @@ end
 
 
 local function DeleteAllPoints()
-    if not IsPathing then
+    if not isPathing then
         
         ExistingPoints = 0
         
@@ -431,7 +431,47 @@ local function PlayCurrentPath()
     if not isPathing then
         isPathing = true
         
+
+        local numberofpoints = 0
+        for i,v in pairs(PointsFolder:GetChildren()) do
+            numberofpoints = numberofpoints + 1
+        end
+
+
+
+        if numberofpoints > 1 then
+
+
+
+            local numberNextPosition = 1
+            local nextPosition = PointsFolder["Pos" .. numberNextPosition]
+            local path = Pathfinder:CreatePath()
+            local endpos = nextPosition.Position
+
+            path:ComputeAsync(RootPosition, endpos)
+
+            for i, wayPoint in pairs (path:GetWaypoints()) do
+                player.Humanoid:MoveTo(wayPoint.Position)
         
+                if wayPoint.Action == Enum.PathWaypointAction.Jump then
+                    player.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+        
+                player.Humanoid.MoveToFinished:Wait()
+            
+            end
+            print(nextPosition.Name .. " at " .. tostring(nextPosition.Position) .. " and players position at " .. tostring(RootPosition))
+            
+            if numberNextPosition + 1 < numberofpoints then
+                numberNextPosition = numberNextPosition + 1
+            elseif numberNextPosition + 1 == numberofpoints then
+                numberNextPosition = 1
+            end
+
+
+        else
+            warn("You require 2 or more points to play the path!")
+        end
     end
 end
 
