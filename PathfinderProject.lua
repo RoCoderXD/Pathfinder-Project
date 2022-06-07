@@ -321,9 +321,11 @@ end)
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
+local Pathfinder = game:GetService("PathfindingService")
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
+local RootPosition = character.HumanoidRootPart.Position
 
 
 local PointsFolder = Instance.new("Folder")
@@ -451,13 +453,17 @@ local function PlayCurrentPath()
             path:ComputeAsync(RootPosition, endpos)
 
             for i, wayPoint in pairs (path:GetWaypoints()) do
-                player.Humanoid:MoveTo(wayPoint.Position)
-        
-                if wayPoint.Action == Enum.PathWaypointAction.Jump then
-                    player.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                if isPathing then
+                    player.Humanoid:MoveTo(wayPoint.Position)
+            
+                    if wayPoint.Action == Enum.PathWaypointAction.Jump then
+                        player.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+            
+                    player.Humanoid.MoveToFinished:Wait()
+                else
+                    return
                 end
-        
-                player.Humanoid.MoveToFinished:Wait()
             
             end
             print(nextPosition.Name .. " at " .. tostring(nextPosition.Position) .. " and players position at " .. tostring(RootPosition))
