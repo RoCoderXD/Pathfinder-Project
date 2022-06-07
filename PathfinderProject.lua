@@ -344,7 +344,7 @@ local isVisual = false
 
 
 local function CreatePoint()
-    if not isPathing then
+    if isPathing == false then
         
         ExistingPoints = ExistingPoints + 1
         
@@ -397,7 +397,7 @@ end
 
 
 local function DeleteLastPoint()
-    if not isPathing then
+    if isPathing == false then
         
         PointsFolder["Pos" .. ExistingPoints]:Destroy()
         MainUI["Pos" .. ExistingPoints]:Destroy()
@@ -412,7 +412,7 @@ end
 
 
 local function DeleteAllPoints()
-    if not isPathing then
+    if isPathing == false then
         
         ExistingPoints = 0
         
@@ -430,7 +430,7 @@ end
 
 
 local function PlayCurrentPath()
-    if not isPathing then
+    if isPathing == false then
         isPathing = true
         
 
@@ -484,7 +484,7 @@ end
 
 
 local function StopCurrentPath()
-    if isPathing then
+    if isPathing == true then
        isPathing = false 
     end
 end
