@@ -443,7 +443,6 @@ local function PlayCurrentPath()
 
         if numberofpoints > 1 then
 
-            rconsoleprint("Enough points, starting path.")
 
             local numberNextPosition = 1
             local nextPosition = PointsFolder["Pos" .. numberNextPosition]
@@ -519,6 +518,10 @@ QuitScript.MouseButton1Click:Connect(function()
     isPathing = false
     isVisual = false
 end)
+
+PlayPath.MouseButton1Click:Connect(PlayCurrentPath)
+
+StopPath.MouseButton1Click:Connect(StopCurrentPath)
 
 NewPoint.MouseButton1Click:Connect(CreatePoint)
 
