@@ -443,7 +443,7 @@ local function PlayCurrentPath()
 
         if numberofpoints > 1 then
 
-
+            print("Enough points, starting path.")
 
             local numberNextPosition = 1
             local nextPosition = PointsFolder["Pos" .. numberNextPosition]
@@ -453,6 +453,7 @@ local function PlayCurrentPath()
             path:ComputeAsync(RootPosition, endpos)
 
             for i, wayPoint in pairs (path:GetWaypoints()) do
+                print(wayPoint.Position)
                 if isPathing then
                     player.Humanoid:MoveTo(wayPoint.Position)
             
