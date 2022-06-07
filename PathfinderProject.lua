@@ -443,7 +443,7 @@ local function PlayCurrentPath()
 
         if numberofpoints > 1 then
 
-            print("Enough points, starting path.")
+            rconsoleprint("Enough points, starting path.")
 
             local numberNextPosition = 1
             local nextPosition = PointsFolder["Pos" .. numberNextPosition]
