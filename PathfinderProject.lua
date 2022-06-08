@@ -325,7 +325,7 @@ local Pathfinder = game:GetService("PathfindingService")
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
-local RootPosition = character.HumanoidRootPart.Position
+
 
 
 local PointsFolder = Instance.new("Folder")
@@ -349,7 +349,7 @@ local function CreatePoint()
         ExistingPoints = ExistingPoints + 1
         
         local Point = Instance.new("Part")
-        Point.Name = "Pos" .. ExistingPoints
+        Point.Name = "Pos" .. tostring(ExistingPoints)
         Point.Position = character.HumanoidRootPart.Position or character.Torso.Position
         Point.Parent = PointsFolder
         Point.Transparency = 0.4
@@ -428,58 +428,62 @@ local function DeleteAllPoints()
 end
 
 
-
 local function PlayCurrentPath()
-    print("1")
+    local numberofpoints = 0
+    for i,v in pairs(PointsFolder:GetChildren()) do
+        numberofpoints = numberofpoints + 1
+    end
+
+    if numberofpoints > 1 then
+
+        local numberNextPosition = 1
+        local nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
+        local RootPosition = character.HumanoidRootPart.Position
+        local path = Pathfinder:CreatePath()
+        local endpos = nextPosition.Position
+
+        path:ComputeAsync(RootPosition, endpos)
+
+        for i, wayPoint in pairs (path:GetWaypoints()) do
+
+            if isPathing == true then
+                character.Humanoid:MoveTo(wayPoint.Position)
+
+                if wayPoint.Action == Enum.PathWaypointAction.Jump then
+                    character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+
+                character.Humanoid.MoveToFinished:Wait()
+                
+                
+            else
+                print("Ending...")
+                break
+            end
+        
+        end
+
+
+        print(nextPosition.Name .. " at " .. tostring(nextPosition.Position) .. " and players position at " .. tostring(RootPosition))
+        
+        if numberNextPosition+1 <= numberofpoints then
+            numberNextPosition = numberNextPosition + 1
+            PlayCurrentPath()
+        elseif numberNextPosition+1 > numberofpoints then
+            numberNextPosition = 1
+            PlayCurrentPath()
+        end
+
+    else
+        warn("You require 2 or more points to play the path!")
+    end
+end
+
+
+local function PlayCurrentPathButton()
     if isPathing == false then
         isPathing = true
-        print("2")
-
-        local numberofpoints = 0
-        for i,v in pairs(PointsFolder:GetChildren()) do
-            numberofpoints = numberofpoints + 1
-        end
-
-        print("3")
-
-        if numberofpoints > 1 then
-
-            print("4")
-            local numberNextPosition = 1
-            local nextPosition = PointsFolder["Pos" .. numberNextPosition]
-            local path = Pathfinder:CreatePath()
-            local endpos = nextPosition.Position
-
-            path:ComputeAsync(RootPosition, endpos)
-            print("5")
-            for i, wayPoint in pairs (path:GetWaypoints()) do
-                print("6")
-                print(wayPoint.Position)
-                if isPathing == true then
-                    player.Humanoid:MoveTo(wayPoint.Position)
-                    print("7")
-                    if wayPoint.Action == Enum.PathWaypointAction.Jump then
-                        player.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                    print("8")
-                    player.Humanoid.MoveToFinished:Wait()
-                else
-                    return
-                end
-            
-            end
-            print(nextPosition.Name .. " at " .. tostring(nextPosition.Position) .. " and players position at " .. tostring(RootPosition))
-            
-            if numberNextPosition + 1 < numberofpoints then
-                numberNextPosition = numberNextPosition + 1
-            elseif numberNextPosition + 1 == numberofpoints then
-                numberNextPosition = 1
-            end
-
-
-        else
-            warn("You require 2 or more points to play the path!")
-        end
+        PlayCurrentPath()
     end
 end
 
@@ -521,7 +525,7 @@ QuitScript.MouseButton1Click:Connect(function()
     isVisual = false
 end)
 
-PlayPath.MouseButton1Click:Connect(PlayCurrentPath)
+PlayPath.MouseButton1Click:Connect(PlayCurrentPathButton)
 
 StopPath.MouseButton1Click:Connect(StopCurrentPath)
 
