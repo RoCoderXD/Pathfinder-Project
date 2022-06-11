@@ -336,7 +336,9 @@ local isPathing = false
 local isVisual = false
 
 
-
+local numberNextPosition = 1
+local numberofpoints = 0
+local nextPosition = PointsFolder -- placeholder, is set later.
 
 
 
@@ -429,61 +431,61 @@ end
 
 
 local function PlayCurrentPath()
-    local numberofpoints = 0
-    for i,v in pairs(PointsFolder:GetChildren()) do
-        numberofpoints = numberofpoints + 1
-    end
+    local RootPosition = character.HumanoidRootPart.Position
+    local path = Pathfinder:CreatePath()
+    local endpos = nextPosition.Position
 
-    if numberofpoints > 1 then
+    path:ComputeAsync(RootPosition, endpos)
 
-        local numberNextPosition = 1
-        local nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
-        local RootPosition = character.HumanoidRootPart.Position
-        local path = Pathfinder:CreatePath()
-        local endpos = nextPosition.Position
+    for i, wayPoint in pairs (path:GetWaypoints()) do
 
-        path:ComputeAsync(RootPosition, endpos)
-
-        for i, wayPoint in pairs (path:GetWaypoints()) do
-
-            if isPathing == true then
+        if isPathing == true then
                 character.Humanoid:MoveTo(wayPoint.Position)
 
-                if wayPoint.Action == Enum.PathWaypointAction.Jump then
+            if wayPoint.Action == Enum.PathWaypointAction.Jump then
                     character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                end
-
-                character.Humanoid.MoveToFinished:Wait()
-                
-                
-            else
-                print("Ending...")
-                break
             end
-        
+
+            character.Humanoid.MoveToFinished:Wait()
+                
+                
+        else
+            print("Ending...")
+            return
         end
-
-
-        print(nextPosition.Name .. " at " .. tostring(nextPosition.Position) .. " and players position at " .. tostring(RootPosition))
         
-        if numberNextPosition+1 <= numberofpoints then
-            numberNextPosition = numberNextPosition + 1
-            PlayCurrentPath()
-        elseif numberNextPosition+1 > numberofpoints then
-            numberNextPosition = 1
-            PlayCurrentPath()
-        end
+    end
 
-    else
-        warn("You require 2 or more points to play the path!")
+
+    print(nextPosition.Name)
+        
+    if numberNextPosition+1 <= numberofpoints then
+
+        numberNextPosition = numberNextPosition + 1
+        nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
+        PlayCurrentPath()
+    elseif numberNextPosition+1 > numberofpoints then
+        
+        numberNextPosition = 1
+        nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
+        PlayCurrentPath()
     end
 end
 
 
 local function PlayCurrentPathButton()
-    if isPathing == false then
+
+    for i,v in pairs(PointsFolder:GetChildren()) do
+        numberofpoints = numberofpoints + 1
+    end
+    
+    if isPathing == false and numberofpoints > 1 then
+
+        nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
         isPathing = true
         PlayCurrentPath()
+    else
+        warn("You require 2 or more points to play the path!")
     end
 end
 
