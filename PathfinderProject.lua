@@ -272,17 +272,72 @@ QuitScript.TextSize = 14.000
 if not isfolder("Pathfinder") then
     makefolder("Pathfinder")
     makefolder("Pathfinder/Saves")
+    writefile("Pathfinder/Saves/DoNotDelete.txt", "")
 end
 if not isfolder("Pathfinder/Saves") then
     makefolder("Pathfinder/Saves")
 end
- 
+if not isfile("Pathfinder/Saves/DoNotDelete.txt") then
+    writefile("Pathfinder/Saves/DoNotDelete.txt", "")
+end
 
 
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local Pathfinder = game:GetService("PathfindingService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+
+
+local PointsFolder = Instance.new("Folder")
+PointsFolder.Parent = workspace
+
+local ExistingPoints = 0
+local isPathing = false
+local isVisual = false
 -- File system functions
 
-local function CreateSave(savename, json)
-    
+
+local savename = "Test"
+local filename = "Pathfinder/Saves/"..savename..".txt"
+
+local function CreateSave()
+
+    local numberofpoints = 0
+    local currentloopnum = 1
+    for i,v in pairs(PointsFolder:GetChildren()) do
+        numberofpoints = numberofpoints + 1
+    end
+
+
+
+    local Points = {}
+
+    while true do
+        wait(0.1)
+        if currentloopnum <= numberofpoints then
+            table.insert(Points, tostring(PointsFolder["Pos"..currentloopnum].Position))
+
+
+            currentloopnum = currentloopnum + 1
+        else
+
+            break
+        end
+    end
+
+
+
+
+    if not isfile(filename) then
+        local json = HttpService:JSONEncode(Points)
+        writefile(filename, json)
+    end
+
 end
 
 
@@ -319,24 +374,6 @@ end)
 
 
 -- Main script section
-
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-local UserInputService = game:GetService("UserInputService")
-local Pathfinder = game:GetService("PathfindingService")
-
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
-
-
-local PointsFolder = Instance.new("Folder")
-PointsFolder.Parent = workspace
-
-local ExistingPoints = 0
-local isPathing = false
-local isVisual = false
-
 
 local numberNextPosition = 1
 local numberofpoints = 0
@@ -538,6 +575,10 @@ NewPoint.MouseButton1Click:Connect(CreatePoint)
 DeleteLast.MouseButton1Click:Connect(DeleteLastPoint)
 
 DeleteAll.MouseButton1Click:Connect(DeleteAllPoints)
+
+
+SavePath.MouseButton1Click:Connect(CreateSave)
+
 
 Youtube.MouseButton1Click:Connect(function()
     setclipboard("https://www.youtube.com/channel/UCF8wEvJcSGXEuVEPm6ZqhIQ")
