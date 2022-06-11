@@ -273,8 +273,10 @@ if not isfolder("Pathfinder") then
     makefolder("Pathfinder")
     makefolder("Pathfinder/Saves")
 end
-
-
+if not isfolder("Pathfinder/Saves") then
+    makefolder("Pathfinder/Saves")
+end
+ 
 
 
 -- File system functions
@@ -465,7 +467,7 @@ local function PlayCurrentPath()
         nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
         PlayCurrentPath()
     elseif numberNextPosition+1 > numberofpoints then
-        
+
         numberNextPosition = 1
         nextPosition = PointsFolder["Pos" .. tostring(numberNextPosition)]
         PlayCurrentPath()
