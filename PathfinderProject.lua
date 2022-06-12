@@ -266,23 +266,6 @@ QuitScript.Text = "Quit Script"
 QuitScript.TextColor3 = Color3.fromRGB(255, 255, 255)
 QuitScript.TextSize = 14.000
 
-
--- First time execution setup
-
-if not isfolder("Pathfinder") then
-    makefolder("Pathfinder")
-    makefolder("Pathfinder/Saves")
-    writefile("Pathfinder/Saves/DoNotDelete.txt", "")
-end
-if not isfolder("Pathfinder/Saves") then
-    makefolder("Pathfinder/Saves")
-end
-if not isfile("Pathfinder/Saves/DoNotDelete.txt") then
-    writefile("Pathfinder/Saves/DoNotDelete.txt", "")
-end
-
-
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -299,6 +282,25 @@ PointsFolder.Parent = workspace
 local ExistingPoints = 0
 local isPathing = false
 local isVisual = false
+
+
+
+-- First time execution setup
+
+if not isfolder("Pathfinder") then
+    makefolder("Pathfinder")
+    makefolder("Pathfinder/Saves")
+    writefile("Pathfinder/Saves/DoNotDelete.txt", "")
+end
+if not isfolder("Pathfinder/Saves") then
+    makefolder("Pathfinder/Saves")
+end
+if not isfile("Pathfinder/Saves/DoNotDelete.txt") then
+    writefile("Pathfinder/Saves/DoNotDelete.txt", HttpService:JSONEncode({"None"}))
+end
+
+
+
 -- File system functions
 
 
@@ -331,11 +333,34 @@ local function CreateSave()
     end
 
 
-
+    if not isfile("Pathfinder/Saves/DoNotDelete.txt") then
+        warn("Missing DoNotDelete.txt file! Can't save due to missing file.")
+    end
 
     if not isfile(savefilename) then
         local json = HttpService:JSONEncode(Points)
         writefile(savefilename, json)
+    end
+
+    if isfile("Pathfinder/Saves/DoNotDelete.txt") then
+        local old = HttpService:JSONDecode(readfile("Pathfinder/Saves/DoNotDelete.txt"))
+
+        if old[1] ~= "None" then
+            table.insert(old, savename)
+
+            local new = HttpService:JSONEncode(old)
+
+            writefile("Pathfinder/Saves/DoNotDelete.txt", new)
+        else
+            table.clear(old)
+
+            table.insert(old, savename)
+
+            local new = HttpService:JSONEncode(old)
+
+            writefile("Pathfinder/Saves/DoNotDelete.txt", new)
+        end
+
     end
 
 end
