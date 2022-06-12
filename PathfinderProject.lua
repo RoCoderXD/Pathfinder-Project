@@ -307,6 +307,8 @@ end
 local savename = "Test"
 local savefilename = "Pathfinder/Saves/"..savename..".txt"
 
+local overwrite = true
+
 local function CreateSave()
 
     local numberofpoints = 0
@@ -337,12 +339,12 @@ local function CreateSave()
         warn("Missing DoNotDelete.txt file! Can't save due to missing file.")
     end
 
-    if not isfile(savefilename) then
+    if overwrite then
         local json = HttpService:JSONEncode(Points)
         writefile(savefilename, json)
     end
 
-    if isfile("Pathfinder/Saves/DoNotDelete.txt") then
+    if overwrite == false and isfile("Pathfinder/Saves/DoNotDelete.txt") then
         local old = HttpService:JSONDecode(readfile("Pathfinder/Saves/DoNotDelete.txt"))
 
         if old[1] ~= "None" then
