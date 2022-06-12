@@ -7,3 +7,8 @@ I know it isn't likely very optimized but it is quite functional. If you are exp
 
 
 Enjoy.
+
+
+Loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/RoCoderXD/Pathfinder-Project/main/PathfinderProject.lua", true))()
+
+This script has only been tested on S^x (as I make my scripts with it), so if you are using something else just keep in mind that it might not work!
