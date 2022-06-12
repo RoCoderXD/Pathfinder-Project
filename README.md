@@ -2,8 +2,8 @@
 
 You are free to use and modify the script to your needs. Just give credit and don't claim it to be yours.
 
-I know it isn't likely very optimized but it is quite functional. If you are experiencing any problems, please create a new issue:
--> https://github.com/RoCoderXD/Pathfinder-Project/issues (be at least a bit descriptive)
+I know it isn't likely very optimized but it is quite functional. Use main branch instead of this (dev) branch
+because this is likely always going to be broken as I use this branch for saving my in progress work.
 
 
 Enjoy.
