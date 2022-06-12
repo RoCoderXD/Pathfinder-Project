@@ -303,7 +303,7 @@ local isVisual = false
 
 
 local savename = "Test"
-local filename = "Pathfinder/Saves/"..savename..".txt"
+local savefilename = "Pathfinder/Saves/"..savename..".txt"
 
 local function CreateSave()
 
@@ -315,7 +315,7 @@ local function CreateSave()
 
 
 
-    local Points = {}
+    local Points = {game.PlaceId}
 
     while true do
         wait(0.1)
@@ -333,9 +333,9 @@ local function CreateSave()
 
 
 
-    if not isfile(filename) then
+    if not isfile(savefilename) then
         local json = HttpService:JSONEncode(Points)
-        writefile(filename, json)
+        writefile(savefilename, json)
     end
 
 end
