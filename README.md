@@ -1,4 +1,4 @@
-# Pathfinder-Project
+# Pathfinder-Project INCOMPLETE
 
 You are free to use and modify the script to your needs. Just give credit and don't claim it to be yours.
 
@@ -12,3 +12,6 @@ Enjoy.
 Loadstring: loadstring(game:HttpGet("https://raw.githubusercontent.com/RoCoderXD/Pathfinder-Project/main/PathfinderProject.lua", true))()
 
 This script has only been tested on S^x (as I make my scripts with it), so if you are using something else just keep in mind that it might not work!
+
+
+The ability to create and play paths/visualize them are the only currently working features. The next feature to come is saving paths.
